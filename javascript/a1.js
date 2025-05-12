@@ -300,37 +300,74 @@ const wordsA1 = [
     ex: "Goodbye, see you tomorrow!"
   }
 ];
+// 🧠 مصفوفة كلمات المستوى A1
 
+// 📌 عرض كلمة عشوائية من كلمات A1
 function getNewWord() {
+  // اختيار كلمة عشوائية من مصفوفة wordsA1
   const word = wordsA1[Math.floor(Math.random() * wordsA1.length)];
+
+  // الحصول على العنصر الذي سيعرض فيه محتوى الكلمة
   const container = document.getElementById("word-card");
 
+  // إدراج الكلمة ومعلوماتها في واجهة المستخدم باستخدام innerHTML
   container.innerHTML = `
-    <h2>${word.en}</h2>
-    <p><strong>الترجمة:</strong> ${word.ar}</p>
-    <p><strong>الشرح:</strong> ${word.def}</p>
-    <p><strong>مثال:</strong> ${word.ex}</p>
-    <button onclick="speakWord('${word.en}')">🔊 استمع للكلمة</button>
-    <button onclick="saveWord('${word.en}', '${word.ar}', '${word.def}', '${word.ex}')">📘 أضف إلى اليوميات</button>
-  `;
-}
-function speakWord(word) {
-  if ('speechSynthesis' in window) {
-    const utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = 'en-US';
-    speechSynthesis.cancel(); // لإيقاف أي نطق سابق
-    speechSynthesis.speak(utterance);
-  } else {
-    alert("❌ النطق غير مدعوم في هذا المتصفح.");
-  }
+  <!-- الكلمة الإنجليزية -->
+  <h2>${word.en}</h2>
+
+  <!-- الترجمة -->
+  <p><strong>الترجمة:</strong> ${word.ar}</p>
+
+  <!-- الشرح -->
+  <p><strong>الشرح:</strong> ${word.def}</p>
+
+  <!-- مثال توضيحي -->
+  <p><strong>مثال:</strong> ${word.ex}</p>
+
+  <!-- زر الاستماع -->
+  <button onclick="speakWord('${word.en}')">🔊 استمع للكلمة</button>
+
+  <!-- زر الحفظ في اليوميات -->
+  <button onclick="saveWord('${word.en}', '${word.ar}', '${word.def}', '${word.ex}')">📘 أضف إلى اليوميات</button>
+`;
+
 }
 
+// 📦 حفظ الكلمة في localStorage
 function saveWord(en, ar, def, ex) {
+  // استرجاع البيانات المخزنة مسبقًا أو إنشاء مصفوفة فارغة إذا لم تكن موجودة
   let diary = JSON.parse(localStorage.getItem("diary") || "[]");
+
+  // إضافة الكلمة الجديدة كمُدخل جديد في المصفوفة
   diary.push({ en, ar, def, ex });
+
+  // إعادة تخزين المصفوفة المحدّثة في localStorage بصيغة JSON
   localStorage.setItem("diary", JSON.stringify(diary));
+
+  // تنبيه المستخدم بأنه تم الحفظ
   alert("✅ تمت الإضافة إلى اليوميات!");
 }
 
+// 🔊 نطق الكلمة باستخدام speechSynthesis
+function speakWord(word) {
+  // التحقق مما إذا كانت ميزة النطق متاحة في المتصفح
+  if ('speechSynthesis' in window) {
+    // إنشاء كائن نطق جديد بالكلمة المطلوبة
+    const utterance = new SpeechSynthesisUtterance(word);
 
+    // تحديد لغة النطق (الإنجليزية الأمريكية)
+    utterance.lang = 'en-US';
+
+    // إلغاء أي نطق سابق قبل تشغيل الجديد
+    speechSynthesis.cancel();
+
+    // تشغيل النطق للكلمة
+    speechSynthesis.speak(utterance);
+  } else {
+    // إظهار تنبيه في حال عدم دعم النطق في المتصفح
+    alert("❌ النطق غير مدعوم.");
+  }
+}
+
+// ✅ تنفيذ دالة getNewWord تلقائيًا عند تحميل الصفحة
 window.onload = getNewWord;

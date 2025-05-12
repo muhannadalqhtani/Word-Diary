@@ -288,37 +288,74 @@ const wordsA2 = [
     ex: "Tomorrow will be cloudy but not rainy."
   }
 ];
+// 🧠 مصفوفة كلمات المستوى A2
+
+// 📌 عرض كلمة عشوائية من كلمات A2
 function getNewWord() {
-  const word = wordsA1[Math.floor(Math.random() * wordsA1.length)];
+  // اختيار كلمة عشوائية من مصفوفة wordsA2
+  const word = wordsA2[Math.floor(Math.random() * wordsA2.length)];
+
+  // الحصول على العنصر الموجود في الصفحة والذي نريد وضع الكلمة فيه
   const container = document.getElementById("word-card");
 
-  container.innerHTML = `
-    <h2>${word.en}</h2>
-    <p><strong>الترجمة:</strong> ${word.ar}</p>
-    <p><strong>الشرح:</strong> ${word.def}</p>
-    <p><strong>مثال:</strong> ${word.ex}</p>
-    <button onclick="speakWord('${word.en}')">🔊 استمع للكلمة</button>
-    <button onclick="saveWord('${word.en}', '${word.ar}', '${word.def}', '${word.ex}')">📘 أضف إلى اليوميات</button>
-  `;
-}
-function speakWord(word) {
-  if ('speechSynthesis' in window) {
-    const utterance = new SpeechSynthesisUtterance(word);
-    utterance.lang = 'en-US';
-    speechSynthesis.cancel(); // لإيقاف أي نطق سابق
-    speechSynthesis.speak(utterance);
-  } else {
-    alert("❌ النطق غير مدعوم في هذا المتصفح.");
-  }
+  // إدراج محتوى الكلمة (النصوص والأزرار) داخل العنصر باستخدام innerHTML
+ container.innerHTML = `
+  <!-- الكلمة الإنجليزية -->
+  <h2>${word.en}</h2>
+
+  <!-- الترجمة -->
+  <p><strong>الترجمة:</strong> ${word.ar}</p>
+
+  <!-- الشرح -->
+  <p><strong>الشرح:</strong> ${word.def}</p>
+
+  <!-- مثال توضيحي -->
+  <p><strong>مثال:</strong> ${word.ex}</p>
+
+  <!-- زر الاستماع -->
+  <button onclick="speakWord('${word.en}')">🔊 استمع للكلمة</button>
+
+  <!-- زر الحفظ في اليوميات -->
+  <button onclick="saveWord('${word.en}', '${word.ar}', '${word.def}', '${word.ex}')">📘 أضف إلى اليوميات</button>
+`;
+
 }
 
-
+// 📦 دالة لحفظ الكلمة التي يتعلمها المستخدم في localStorage
 function saveWord(en, ar, def, ex) {
+  // جلب اليوميات المحفوظة سابقًا من localStorage وتحويلها إلى مصفوفة (أو مصفوفة فارغة إن لم توجد)
   let diary = JSON.parse(localStorage.getItem("diary") || "[]");
+
+  // إضافة الكلمة الجديدة إلى المصفوفة
   diary.push({ en, ar, def, ex });
+
+  // تخزين المصفوفة المحدثة في localStorage بصيغة JSON
   localStorage.setItem("diary", JSON.stringify(diary));
+
+  // تنبيه المستخدم بأنه تم حفظ الكلمة
   alert("✅ تمت الإضافة إلى اليوميات!");
 }
 
+// 🔊 دالة لنطق الكلمة الإنجليزية باستخدام Web Speech API
+function speakWord(word) {
+  // التحقق من أن المتصفح يدعم speechSynthesis
+  if ('speechSynthesis' in window) {
+    // إنشاء كائن يمثل النص المراد نطقه
+    const utterance = new SpeechSynthesisUtterance(word);
 
+    // تحديد لغة النطق (الإنجليزية الأمريكية)
+    utterance.lang = 'en-US';
+
+    // إلغاء أي نطق سابق جاري حاليًا
+    speechSynthesis.cancel();
+
+    // تشغيل النطق للكلمة المحددة
+    speechSynthesis.speak(utterance);
+  } else {
+    // إذا لم يكن النطق مدعومًا، عرض رسالة للمستخدم
+    alert("❌ النطق غير مدعوم.");
+  }
+}
+
+// ✅ تنفيذ دالة getNewWord تلقائيًا عند تحميل الصفحة لعرض الكلمة الأولى
 window.onload = getNewWord;
