@@ -67,7 +67,7 @@ englishApp/
 - الرقم الجامعي: **443330468**
 - الكلية : **كلية الاتصالات و المعلومات بالرياض**
 - المادة العلمية : **برمجة الاجهزة الذكية**
-- GitHub: [@muhannadalqhtani](https://github.com/muhannadalqhtani)
+- GitHub: [@muhannadalqhtani](https://github.com/muhannadalqhtani/Word-Diary)
 
 ---
 
